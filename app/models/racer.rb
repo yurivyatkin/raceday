@@ -15,6 +15,10 @@ class Racer
 		@secs=params[:secs].to_i
 	end
 
+  def persisted?
+    !@id.nil?
+  end
+
 	# convenience method for access to client in console
 	def self.mongo_client
 		Mongoid::Clients.default
