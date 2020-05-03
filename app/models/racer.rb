@@ -32,4 +32,13 @@ class Racer
 
 		return result
 	end
+
+  # Must handle when id is either a string or BSON::ObjectId
+  def self.find id
+    _id = id.instance_of?(String) ?  BSON::ObjectId.from_string(id) : id
+    result=collection
+      .find(:_id=>_id)
+      .first
+    return result.nil? ? nil : Racer.new(result)
+  end
 end
