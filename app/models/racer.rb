@@ -33,12 +33,25 @@ class Racer
 		return result
 	end
 
-  # Must handle when id is either a string or BSON::ObjectId
-  def self.find id
-    _id = id.instance_of?(String) ?  BSON::ObjectId.from_string(id) : id
-    result=collection
-      .find(:_id=>_id)
-      .first
-    return result.nil? ? nil : Racer.new(result)
-  end
+	# Must handle when id is either a string or BSON::ObjectId
+	def self.find id
+		_id = id.instance_of?(String) ?  BSON::ObjectId.from_string(id) : id
+		result=collection
+			.find(:_id=>_id)
+			.first
+		return result.nil? ? nil : Racer.new(result)
+	end
+
+	def save 
+		result=self.class.collection
+			.insert_one(
+				_id:@id,
+				number:@number,
+				first_name:@first_name,
+				last_name:@last_name,
+				gender:@gender,
+				group:@group,
+				secs:@secs)
+		@id=result.inserted_id.to_s
+	end
 end
