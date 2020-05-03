@@ -1,23 +1,35 @@
 class Racer
-  attr_accessor :id, :number, :first_name, :last_name, :gender, :group, :secs
+	attr_accessor :id, :number, :first_name, :last_name, :gender, :group, :secs
 
-  # convenience method for access to client in console
-  def self.mongo_client
-    Mongoid::Clients.default
-  end
+	def initialize(params={})
+		# Test whether the hash is coming from a web page [:id]
+		# or from a MongoDB query [:_id] and assign the value to whichever is non-nil
+		@id=params[:_id].nil? ? params[:id] : params[:_id].to_s
+		@number=params[:number].to_i
+		@first_name=params[:first_name]
+		@last_name=params[:last_name]
+		@gender=params[:gender]
+		@group=params[:group]
+		@secs=params[:secs].to_i
+	end
 
-  # convenience method for access to zips collection
-  def self.collection
-    self.mongo_client['racers']
-  end
+	# convenience method for access to client in console
+	def self.mongo_client
+		Mongoid::Clients.default
+	end
 
-  def self.all(prototype={}, sort={:number=>1}, offset=0, limit=nil)
-    result=collection.find(prototype)
-      .sort(sort)
-      .skip(offset)
+	# convenience method for access to zips collection
+	def self.collection
+		self.mongo_client['racers']
+	end
 
-    result=result.limit(limit) if !limit.nil?
+	def self.all(prototype={}, sort={:number=>1}, offset=0, limit=nil)
+		result=collection.find(prototype)
+			.sort(sort)
+			.skip(offset)
 
-    return result
-  end
+		result=result.limit(limit) if !limit.nil?
+
+		return result
+	end
 end
