@@ -1,4 +1,6 @@
 class Racer
+  attr_accessor :id, :number, :first_name, :last_name, :gender, :group, :secs
+
   # convenience method for access to client in console
   def self.mongo_client
     Mongoid::Clients.default
